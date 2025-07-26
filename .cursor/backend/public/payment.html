@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Registration - Healthy Grandparent</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .payment-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-period {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .features-list li {
+            padding: 0.5rem 0;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        
+        .features-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .payment-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .security-badge {
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .security-badge:before {
+            content: "🔒";
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Stripe Elements Styling */
+        #card-element {
+            padding: 1rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            font-size: 1.1rem;
+        }
+        
+        #card-element.StripeElement--focus {
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        #card-errors {
+            color: #e74c3c;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .payment-card {
+                padding: 2rem;
+                margin: 0 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .price {
+                font-size: 2.5rem;
+            }
+            
+            .security-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="payment-card">
+            <div class="header">
+                <div class="logo">Healthy <span>Grandparent</span></div>
+                <h1 class="title">Complete Your Registration</h1>
+                <p class="subtitle">Get unlimited access to our expert-led workout programs</p>
+            </div>
+            
+            <div class="pricing-section">
+                <div class="price">$19.99</div>
+                <div class="price-period">per month</div>
+                
+                <ul class="features-list">
+                    <li>Unlimited access to all workout programs</li>
+                    <li>Expert-led video demonstrations</li>
+                    <li>Personalized progress tracking</li>
+                    <li>Fall prevention exercises</li>
+                    <li>Strength building routines</li>
+                    <li>Balance improvement workouts</li>
+                    <li>24/7 support and guidance</li>
+                    <li>Cancel anytime</li>
+                </ul>
+            </div>
+            
+            <div id="messageContainer"></div>
+            
+            <form class="payment-form" id="paymentForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Your last name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-element">Credit or Debit Card</label>
+                    <div id="card-element"></div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    Start Your Fitness Journey - $19.99/month
+                </button>
+            </form>
+            
+            <div class="loading" id="loading">
+                Processing your payment...
+            </div>
+            
+            <div class="security-badges">
+                <div class="security-badge">Secure Payment</div>
+                <div class="security-badge">SSL Encrypted</div>
+                <div class="security-badge">PCI Compliant</div>
+            </div>
+            
+            <a href="/" class="back-link">← Back to home</a>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is authenticated
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            window.location.href = '/';
+        }
+        
+        // API Configuration
+        const API_BASE = window.location.origin;
+        
+        // Form elements
+        const form = document.getElementById('paymentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const messageContainer = document.getElementById('messageContainer');
+        
+        // Show message function
+        function showMessage(message, type = 'success') {
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+            messageContainer.style.display = 'block';
+            
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Initialize Stripe
+        let stripe;
+        let elements;
+        let card;
+        
+        async function initializeStripe() {
+            try {
+                // Get Stripe public key from server (you'll need to add this endpoint)
+                const response = await fetch(`${API_BASE}/api/payment/config`);
+                const config = await response.json();
+                
+                stripe = Stripe(config.publishableKey);
+                elements = stripe.elements();
+                
+                // Create card element
+                card = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#424770',
+                            '::placeholder': {
+                                color: '#aab7c4',
+                            },
+                        },
+                        invalid: {
+                            color: '#9e2146',
+                        },
+                    },
+                });
+                
+                card.mount('#card-element');
+                
+                // Handle real-time validation errors
+                card.addEventListener('change', function(event) {
+                    const displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error initializing Stripe:', error);
+                showMessage('Payment system error. Please try again later.', 'error');
+            }
+        }
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            
+            if (!email || !firstName || !lastName) {
+                showMessage('Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                // Create payment intent
+                const intentResponse = await fetch(`${API_BASE}/api/payment/create-intent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        amount: 1999, // $19.99 in cents
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName
+                    })
+                });
+                
+                const intentData = await intentResponse.json();
+                
+                if (!intentResponse.ok) {
+                    throw new Error(intentData.message || 'Failed to create payment');
+                }
+                
+                // Confirm payment with Stripe
+                const { error, paymentIntent } = await stripe.confirmCardPayment(intentData.clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            name: `${firstName} ${lastName}`,
+                            email: email
+                        }
+                    }
+                });
+                
+                if (error) {
+                    showMessage(error.message, 'error');
+                } else if (paymentIntent.status === 'succeeded') {
+                    showMessage('Payment successful! Redirecting to your dashboard...', 'success');
+                    
+                    // Update user profile
+                    await fetch(`${API_BASE}/api/users/profile`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            first_name: firstName,
+                            last_name: lastName
+                        })
+                    });
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 2000);
+                    
+                } else {
+                    showMessage('Payment processing. Please wait...', 'success');
+                }
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                showMessage('Payment failed. Please try again.', 'error');
+            } finally {
+                // Reset form state
+                submitBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Initialize Stripe on page load
+        initializeStripe();
+        
+        // Pre-fill form with user data if available
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                if (user.email) document.getElementById('email').value = user.email;
+                if (user.first_name) document.getElementById('firstName').value = user.first_name;
+                if (user.last_name) document.getElementById('lastName').value = user.last_name;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        }
+    </script>
+</body>
+</html> 

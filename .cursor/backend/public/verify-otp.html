@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Phone - Healthy Grandparent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        
+        .verification-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        .title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+        
+        .phone-display {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .otp-form {
+            margin-bottom: 2rem;
+        }
+        
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 20px rgba(149, 165, 166, 0.4);
+        }
+        
+        .resend-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .resend-text {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .resend-btn:hover {
+            color: #2980b9;
+        }
+        
+        .resend-btn:disabled {
+            color: #bdc3c7;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .verification-card {
+                padding: 2rem;
+                margin: 0 20px;
+            }
+            
+            .otp-inputs {
+                gap: 0.5rem;
+            }
+            
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="verification-card">
+            <div class="logo">Healthy <span>Grandparent</span></div>
+            
+            <h1 class="title">Verify Your Phone</h1>
+            <p class="subtitle">Enter the 6-digit code we sent to your phone</p>
+            
+            <div class="phone-display" id="phoneDisplay">
+                <!-- Phone number will be displayed here -->
+            </div>
+            
+            <div id="messageContainer"></div>
+            
+            <form class="otp-form" id="otpForm">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" data-index="0">
+                    <input type="text" class="otp-input" maxlength="1" data-index="1">
+                    <input type="text" class="otp-input" maxlength="1" data-index="2">
+                    <input type="text" class="otp-input" maxlength="1" data-index="3">
+                    <input type="text" class="otp-input" maxlength="1" data-index="4">
+                    <input type="text" class="otp-input" maxlength="1" data-index="5">
+                </div>
+                
+                <button type="submit" class="btn" id="verifyBtn">
+                    Verify & Continue
+                </button>
+            </form>
+            
+            <div class="loading" id="loading">
+                Verifying your code...
+            </div>
+            
+            <div class="resend-section">
+                <p class="resend-text">Didn't receive the code?</p>
+                <button class="resend-btn" id="resendBtn" onclick="resendOTP()">
+                    Send code again
+                </button>
+                <div id="resendTimer" style="display: none; margin-top: 0.5rem; color: #7f8c8d;">
+                    Resend available in <span id="timerCount">60</span> seconds
+                </div>
+            </div>
+            
+            <a href="/" class="back-link">← Back to home</a>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.origin;
+        
+        // Get stored phone number
+        const phone = localStorage.getItem('tempPhone');
+        
+        if (!phone) {
+            // Redirect back to home if no phone number
+            window.location.href = '/';
+        }
+        
+        // Display phone number
+        document.getElementById('phoneDisplay').textContent = phone;
+        
+        // OTP input handling
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const form = document.getElementById('otpForm');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const loading = document.getElementById('loading');
+        const messageContainer = document.getElementById('messageContainer');
+        const resendBtn = document.getElementById('resendBtn');
+        const resendTimer = document.getElementById('resendTimer');
+        const timerCount = document.getElementById('timerCount');
+        
+        // Auto-focus and move to next input
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function(e) {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (!/^\d*$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Move to next input if value entered
+                if (value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                // Move to previous input on backspace if current input is empty
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+            
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').replace(/\D/g, '');
+                
+                if (pastedData.length === 6) {
+                    otpInputs.forEach((input, i) => {
+                        input.value = pastedData[i] || '';
+                    });
+                    // Focus last input
+                    otpInputs[5].focus();
+                }
+            });
+        });
+        
+        // Show message function
+        function showMessage(message, type = 'success') {
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+            messageContainer.style.display = 'block';
+            
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Get OTP from inputs
+        function getOTP() {
+            return Array.from(otpInputs).map(input => input.value).join('');
+        }
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const otp = getOTP();
+            
+            if (otp.length !== 6) {
+                showMessage('Please enter the complete 6-digit code', 'error');
+                return;
+            }
+            
+            // Show loading state
+            verifyBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: phone,
+                        otp: otp
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    showMessage('Verification successful! Redirecting...', 'success');
+                    
+                    // Store token and user data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    localStorage.removeItem('tempPhone'); // Clean up
+                    
+                    // Redirect based on payment status
+                    setTimeout(() => {
+                        if (data.has_paid) {
+                            window.location.href = '/dashboard.html';
+                        } else {
+                            window.location.href = '/payment.html';
+                        }
+                    }, 2000);
+                    
+                } else {
+                    showMessage(data.message || 'Invalid verification code. Please try again.', 'error');
+                    // Clear OTP inputs on error
+                    otpInputs.forEach(input => input.value = '');
+                    otpInputs[0].focus();
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                // Reset form state
+                verifyBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Resend OTP functionality
+        let resendCountdown = 60;
+        let resendInterval;
+        
+        function startResendTimer() {
+            resendBtn.disabled = true;
+            resendTimer.style.display = 'block';
+            resendCountdown = 60;
+            
+            resendInterval = setInterval(() => {
+                resendCountdown--;
+                timerCount.textContent = resendCountdown;
+                
+                if (resendCountdown <= 0) {
+                    clearInterval(resendInterval);
+                    resendBtn.disabled = false;
+                    resendTimer.style.display = 'none';
+                }
+            }, 1000);
+        }
+        
+        async function resendOTP() {
+            if (resendBtn.disabled) return;
+            
+            resendBtn.textContent = 'Sending...';
+            resendBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/request-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: phone
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('New verification code sent!', 'success');
+                    startResendTimer();
+                } else {
+                    showMessage(data.message || 'Failed to send new code. Please try again.', 'error');
+                    resendBtn.disabled = false;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Network error. Please try again.', 'error');
+                resendBtn.disabled = false;
+            } finally {
+                resendBtn.textContent = 'Send code again';
+            }
+        }
+        
+        // Start timer on page load
+        startResendTimer();
+        
+        // Focus first input on page load
+        otpInputs[0].focus();
+        
+        // Accessibility improvements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.classList.contains('otp-input')) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html> 

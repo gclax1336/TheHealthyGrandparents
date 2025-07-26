@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Grandparent - Stay Strong, Stay Independent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        /* Registration Form */
+        .registration-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .form-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 20px rgba(149, 165, 166, 0.4);
+        }
+        
+        /* Benefits Section */
+        .benefits {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .benefits h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .benefit-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+        
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-card p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Loading and Messages */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 1.1rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .registration-form {
+                margin: 0 20px;
+                padding: 2rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Healthy <span>Grandparent</span></a>
+                <nav>
+                    <a href="#benefits" style="color: #2c3e50; text-decoration: none; font-size: 1.1rem; margin-left: 2rem;">Learn More</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Stay Strong, Stay Independent</h1>
+            <h2>Prevent Falls with Expert-Led Workouts</h2>
+            <p>Join thousands of grandparents who are maintaining their strength, balance, and independence through our specialized fitness programs designed specifically for your needs.</p>
+            
+            <!-- Registration Form -->
+            <div class="registration-form">
+                <h3 class="form-title">Start Your Journey Today</h3>
+                
+                <div id="messageContainer"></div>
+                
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            placeholder="+1 (555) 123-4567"
+                            required
+                            pattern="^\+?[1-9]\d{1,14}$"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn" id="submitBtn">
+                        Get Started - It's Free!
+                    </button>
+                </form>
+                
+                <div class="loading" id="loading">
+                    Sending verification code...
+                </div>
+                
+                <p style="font-size: 1rem; color: #7f8c8d; margin-top: 1rem;">
+                    We'll send you a free verification code to get started
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <h2>Why Choose Healthy Grandparent?</h2>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <h3>Fall Prevention</h3>
+                    <p>Specialized exercises to improve balance and prevent falls, helping you stay safe and independent in your daily activities.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">💪</div>
+                    <h3>Strength Building</h3>
+                    <p>Gentle but effective workouts designed to maintain muscle strength and improve your ability to perform daily tasks.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Expert Guidance</h3>
+                    <p>Professional trainers who understand the unique needs of older adults and create safe, effective workout programs.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Easy to Use</h3>
+                    <p>Simple, intuitive interface with large text and clear instructions, perfect for seniors who want to stay active.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏠</div>
+                    <h3>Workout Anywhere</h3>
+                    <p>Complete your workouts in the comfort of your own home with minimal equipment needed.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">❤️</div>
+                    <h3>Proven Results</h3>
+                    <p>Join thousands of grandparents who have improved their strength, balance, and confidence through our programs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Healthy Grandparent. Empowering independence through fitness.</p>
+        </div>
+    </footer>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.origin;
+        
+        // Form handling
+        const form = document.getElementById('registrationForm');
+        const phoneInput = document.getElementById('phone');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const messageContainer = document.getElementById('messageContainer');
+        
+        // Phone number formatting
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `+1 (${value}`;
+                } else if (value.length <= 6) {
+                    value = `+1 (${value.slice(0, 3)}) ${value.slice(3)}`;
+                } else if (value.length <= 10) {
+                    value = `+1 (${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
+                } else {
+                    value = `+1 (${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                }
+            }
+            
+            e.target.value = value;
+        });
+        
+        // Show message function
+        function showMessage(message, type = 'success') {
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+            messageContainer.style.display = 'block';
+            
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phone = phoneInput.value.replace(/\D/g, '');
+            
+            if (phone.length !== 10) {
+                showMessage('Please enter a valid 10-digit phone number', 'error');
+                return;
+            }
+            
+            const formattedPhone = `+1${phone}`;
+            
+            // Show loading state
+            submitBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/request-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: formattedPhone
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Verification code sent! Check your phone for the SMS.', 'success');
+                    
+                    // Store phone number for next step
+                    localStorage.setItem('tempPhone', formattedPhone);
+                    
+                    // Redirect to OTP verification page
+                    setTimeout(() => {
+                        window.location.href = '/verify-otp.html';
+                    }, 2000);
+                    
+                } else {
+                    showMessage(data.message || 'Failed to send verification code. Please try again.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                // Reset form state
+                submitBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Smooth scrolling for navigation
+        document.querySelector('a[href="#benefits"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('benefits').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        // Accessibility improvements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement === phoneInput) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html> 

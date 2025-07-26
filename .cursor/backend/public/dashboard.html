@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Dashboard - Healthy Grandparent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 2rem 20px;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        /* Workout Programs */
+        .section-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .program-image {
+            height: 200px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .program-content {
+            padding: 2rem;
+        }
+        
+        .program-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .program-description {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .program-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .program-duration {
+            background: #e8f5e8;
+            color: #27ae60;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .program-level {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 20px rgba(149, 165, 166, 0.4);
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-btn {
+            background: white;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Loading and Messages */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .welcome-section {
+                padding: 2rem 1rem;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .programs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">Healthy <span>Grandparent</span></a>
+            <div class="user-menu">
+                <span class="user-name" id="userName">Welcome!</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div id="messageContainer"></div>
+        
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome to Your Fitness Journey!</h1>
+            <p class="welcome-subtitle">Stay strong, stay independent with our expert-led workout programs</p>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="workoutsCompleted">0</div>
+                <div class="stat-label">Workouts Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-number" id="totalMinutes">0</div>
+                <div class="stat-label">Minutes Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-number" id="currentStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-number" id="strengthScore">0</div>
+                <div class="stat-label">Strength Score</div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="#workouts" class="action-btn">Start Today's Workout</a>
+            <a href="#progress" class="action-btn">View Progress</a>
+            <a href="#profile" class="action-btn">Update Profile</a>
+            <a href="#support" class="action-btn">Get Support</a>
+        </div>
+        
+        <!-- Workout Programs -->
+        <h2 class="section-title">Your Workout Programs</h2>
+        <div class="programs-grid" id="programsGrid">
+            <div class="loading">Loading workout programs...</div>
+        </div>
+        
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <h3 style="margin-bottom: 1rem; color: #2c3e50;">Your Progress This Week</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
+            </div>
+            <p style="color: #7f8c8d; margin-top: 0.5rem;">
+                <span id="progressText">0%</span> of weekly goal completed
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            window.location.href = '/';
+        }
+        
+        // API Configuration
+        const API_BASE = window.location.origin;
+        
+        // DOM elements
+        const userName = document.getElementById('userName');
+        const messageContainer = document.getElementById('messageContainer');
+        const programsGrid = document.getElementById('programsGrid');
+        
+        // Show message function
+        function showMessage(message, type = 'success') {
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Load user data
+        async function loadUserData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/users/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    const user = userData.user;
+                    
+                    // Display user name
+                    const displayName = user.first_name || user.phone;
+                    userName.textContent = `Welcome, ${displayName}!`;
+                    
+                } else {
+                    throw new Error('Failed to load user data');
+                }
+                
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showMessage('Failed to load user data', 'error');
+            }
+        }
+        
+        // Load workout programs
+        async function loadWorkoutPrograms() {
+            try {
+                // For now, we'll use mock data since the workout programs aren't in the database yet
+                const mockPrograms = [
+                    {
+                        id: 1,
+                        name: "Fall Prevention Basics",
+                        description: "Essential exercises to improve balance and prevent falls. Perfect for beginners.",
+                        duration: "15 min",
+                        level: "Beginner",
+                        icon: "🛡️",
+                        completed: false
+                    },
+                    {
+                        id: 2,
+                        name: "Strength Building",
+                        description: "Gentle strength training to maintain muscle mass and improve daily activities.",
+                        duration: "20 min",
+                        level: "Beginner",
+                        icon: "💪",
+                        completed: false
+                    },
+                    {
+                        id: 3,
+                        name: "Balance & Coordination",
+                        description: "Advanced balance exercises to enhance stability and confidence.",
+                        duration: "25 min",
+                        level: "Intermediate",
+                        icon: "⚖️",
+                        completed: false
+                    },
+                    {
+                        id: 4,
+                        name: "Getting Up Safely",
+                        description: "Learn proper techniques for getting up from falls and difficult positions.",
+                        duration: "10 min",
+                        level: "All Levels",
+                        icon: "🆘",
+                        completed: false
+                    },
+                    {
+                        id: 5,
+                        name: "Daily Mobility",
+                        description: "Flexibility and range of motion exercises for better daily movement.",
+                        duration: "15 min",
+                        level: "All Levels",
+                        icon: "🧘",
+                        completed: false
+                    },
+                    {
+                        id: 6,
+                        name: "Cardio Health",
+                        description: "Safe cardiovascular exercises to improve heart health and endurance.",
+                        duration: "30 min",
+                        level: "Intermediate",
+                        icon: "❤️",
+                        completed: false
+                    }
+                ];
+                
+                displayWorkoutPrograms(mockPrograms);
+                
+            } catch (error) {
+                console.error('Error loading workout programs:', error);
+                programsGrid.innerHTML = '<div class="message error">Failed to load workout programs</div>';
+            }
+        }
+        
+        // Display workout programs
+        function displayWorkoutPrograms(programs) {
+            programsGrid.innerHTML = programs.map(program => `
+                <div class="program-card">
+                    <div class="program-image">
+                        ${program.icon}
+                    </div>
+                    <div class="program-content">
+                        <h3 class="program-title">${program.name}</h3>
+                        <p class="program-description">${program.description}</p>
+                        <div class="program-meta">
+                            <span class="program-duration">${program.duration}</span>
+                            <span class="program-level">${program.level}</span>
+                        </div>
+                        <button class="btn" onclick="startWorkout(${program.id})">
+                            ${program.completed ? 'Replay Workout' : 'Start Workout'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Start workout function
+        function startWorkout(programId) {
+            showMessage('Workout feature coming soon! This will launch the workout interface.', 'success');
+            // TODO: Implement workout interface
+        }
+        
+        // Load user stats
+        async function loadUserStats() {
+            try {
+                // Mock stats for now - these would come from the database
+                document.getElementById('workoutsCompleted').textContent = '12';
+                document.getElementById('totalMinutes').textContent = '180';
+                document.getElementById('currentStreak').textContent = '5';
+                document.getElementById('strengthScore').textContent = '75';
+                
+                // Mock progress
+                const progress = 60; // 60% of weekly goal
+                document.getElementById('weeklyProgress').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `${progress}%`;
+                
+            } catch (error) {
+                console.error('Error loading user stats:', error);
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('tempPhone');
+            window.location.href = '/';
+        }
+        
+        // Initialize dashboard
+        async function initializeDashboard() {
+            await loadUserData();
+            await loadWorkoutPrograms();
+            await loadUserStats();
+        }
+        
+        // Start dashboard
+        initializeDashboard();
+        
+        // Handle authentication errors
+        window.addEventListener('error', function(e) {
+            if (e.message.includes('401') || e.message.includes('Unauthorized')) {
+                showMessage('Session expired. Please log in again.', 'error');
+                setTimeout(() => {
+                    logout();
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html> 

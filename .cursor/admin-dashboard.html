@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Grandparent - Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .login-section {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .users-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .users-table h3 {
+            padding: 1rem;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .paid {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .unpaid {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .search-bar {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .export-btn {
+            background: #27ae60;
+            margin-left: 1rem;
+        }
+        
+        .export-btn:hover {
+            background: #229954;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .pagination button {
+            padding: 0.5rem 1rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Healthy Grandparent - Admin Dashboard</h1>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section">
+        <h2>Admin Login</h2>
+        <input type="text" id="adminPhone" placeholder="Admin Phone Number" value="+12676149002">
+        <input type="password" id="adminOtp" placeholder="Admin OTP" value="123456">
+        <button onclick="adminLogin()">Login</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">-</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="paidUsers">-</div>
+                <div class="stat-label">Paid Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="conversionRate">-</div>
+                <div class="stat-label">Conversion Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="newUsersToday">-</div>
+                <div class="stat-label">New Users Today</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="chart-container">
+            <h3>Daily Signups (Last 30 Days)</h3>
+            <canvas id="signupsChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h3>Conversion Rate Over Time</h3>
+            <canvas id="conversionChart"></canvas>
+        </div>
+
+        <!-- Users Table -->
+        <div class="users-table">
+            <h3>Recent Users</h3>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search users by phone, email, or name...">
+                <button onclick="searchUsers()">Search</button>
+                <button class="export-btn" onclick="exportUsers()">Export CSV</button>
+            </div>
+            <div id="usersTableContainer">
+                <div class="loading">Loading users...</div>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <script>
+        let adminToken = localStorage.getItem('adminToken');
+        let currentPage = 1;
+        let signupsChart, conversionChart;
+
+        // Check if already logged in
+        if (adminToken) {
+            showDashboard();
+        }
+
+        async function adminLogin() {
+            const phone = document.getElementById('adminPhone').value;
+            const otp = document.getElementById('adminOtp').value;
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, otp })
+                });
+
+                const data = await response.json();
+                if (data.token) {
+                    adminToken = data.token;
+                    localStorage.setItem('adminToken', adminToken);
+                    showDashboard();
+                } else {
+                    alert('Login failed: ' + data.error);
+                }
+            } catch (error) {
+                alert('Login error: ' + error.message);
+            }
+        }
+
+        function logout() {
+            adminToken = null;
+            localStorage.removeItem('adminToken');
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            loadDashboardData();
+        }
+
+        async function loadDashboardData() {
+            await Promise.all([
+                loadAnalyticsSummary(),
+                loadDailySignups(),
+                loadUsers(),
+                loadConversionRate()
+            ]);
+        }
+
+        async function loadAnalyticsSummary() {
+            try {
+                const response = await fetch('/api/admin/analytics/summary', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                document.getElementById('totalUsers').textContent = data.total_users || 0;
+                document.getElementById('paidUsers').textContent = data.paid_users || 0;
+                document.getElementById('conversionRate').textContent = (data.conversion_rate || 0) + '%';
+                document.getElementById('newUsersToday').textContent = data.new_users_today || 0;
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        async function loadDailySignups() {
+            try {
+                const response = await fetch('/api/admin/analytics/daily-signups?days=30', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                const ctx = document.getElementById('signupsChart').getContext('2d');
+                if (signupsChart) signupsChart.destroy();
+                
+                signupsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.signups.map(item => item.date),
+                        datasets: [{
+                            label: 'Signups',
+                            data: data.signups.map(item => item.signups),
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.1
+                        }, {
+                            label: 'Paid Users',
+                            data: data.signups.map(item => item.paid_users),
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading daily signups:', error);
+            }
+        }
+
+        async function loadConversionRate() {
+            try {
+                const response = await fetch('/api/admin/analytics/conversion-rate', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                const ctx = document.getElementById('conversionChart').getContext('2d');
+                if (conversionChart) conversionChart.destroy();
+                
+                conversionChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Paid Users', 'Unpaid Users'],
+                        datasets: [{
+                            data: [data.paid_users, data.total_users - data.paid_users],
+                            backgroundColor: ['#27ae60', '#e74c3c']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading conversion rate:', error);
+            }
+        }
+
+        async function loadUsers(page = 1) {
+            try {
+                const response = await fetch(`/api/admin/users?page=${page}&limit=20`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                displayUsers(data.users);
+                displayPagination(data.pagination);
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersTableContainer');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<div class="loading">No users found</div>';
+                return;
+            }
+
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>${user.id}</td>
+                                <td>${user.phone || '-'}</td>
+                                <td>${user.email || '-'}</td>
+                                <td>${user.first_name || ''} ${user.last_name || ''}</td>
+                                <td class="${user.has_paid ? 'paid' : 'unpaid'}">
+                                    ${user.has_paid ? 'Paid' : 'Unpaid'}
+                                </td>
+                                <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function displayPagination(pagination) {
+            const container = document.getElementById('pagination');
+            const { page, pages } = pagination;
+            
+            let buttons = '';
+            if (page > 1) {
+                buttons += `<button onclick="loadUsers(${page - 1})">Previous</button>`;
+            }
+            buttons += `<span>Page ${page} of ${pages}</span>`;
+            if (page < pages) {
+                buttons += `<button onclick="loadUsers(${page + 1})">Next</button>`;
+            }
+            
+            container.innerHTML = buttons;
+        }
+
+        async function searchUsers() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) {
+                loadUsers();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/users/search?q=${encodeURIComponent(query)}`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                displayUsers(data.users);
+                document.getElementById('pagination').innerHTML = '';
+            } catch (error) {
+                console.error('Error searching users:', error);
+            }
+        }
+
+        async function exportUsers() {
+            try {
+                const response = await fetch('/api/admin/export/users', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'users-export.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error exporting users:', error);
+                alert('Export failed: ' + error.message);
+            }
+        }
+
+        // Auto-refresh every 5 minutes
+        setInterval(loadDashboardData, 5 * 60 * 1000);
+    </script>
+</body>
+</html> 
